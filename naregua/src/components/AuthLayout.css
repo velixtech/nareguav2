@@ -1,0 +1,57 @@
+.auth {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+}
+.auth__arte { display: none; position: relative; overflow: hidden; isolation: isolate; }
+.auth__arte img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 40% center; z-index: -2; }
+.auth__arte::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(to top, rgba(11, 10, 9, 0.95) 0%, rgba(11, 10, 9, 0.3) 55%, rgba(11, 10, 9, 0.5) 100%);
+}
+.auth__arte-texto { position: absolute; left: clamp(2rem, 4vw, 3.5rem); right: 2rem; bottom: clamp(2rem, 5vw, 3.5rem); }
+.auth__arte-texto .tag { font-size: 1.6rem; transform: rotate(-3deg); display: inline-block; }
+.auth__frase {
+  font-size: clamp(2rem, 3.4vw, 3.25rem);
+  font-weight: 900;
+  font-stretch: 115%;
+  text-transform: uppercase;
+  line-height: 0.98;
+  max-width: 14ch;
+}
+.auth__painel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(2rem, 6vw, 4rem) var(--gutter);
+  background:
+    radial-gradient(ellipse at top right, rgba(242, 181, 58, 0.08), transparent 55%),
+    var(--bg);
+}
+.auth__caixa { width: 100%; max-width: 26rem; display: grid; gap: 1.75rem; }
+.auth__cabecalho { display: grid; gap: 0.4rem; }
+.auth__cabecalho h1 { font-size: clamp(1.8rem, 4vw, 2.3rem); font-stretch: 110%; text-transform: uppercase; }
+.auth__form { display: grid; gap: 1.1rem; }
+.auth__linha { display: flex; justify-content: space-between; align-items: center; font-size: 0.88rem; }
+.auth__rodape { text-align: center; font-size: 0.92rem; color: var(--muted); }
+.auth__demo {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1.1rem;
+  border-radius: var(--r);
+  border: 1px dashed rgba(242, 181, 58, 0.4);
+  background: var(--gold-soft);
+}
+.auth__demo p { font-size: 0.85rem; color: var(--muted); }
+.auth__demo strong { color: var(--gold-2); }
+.auth__demo-botoes { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+.auth__voltar { justify-self: start; font-size: 0.88rem; color: var(--muted); display: inline-flex; gap: 0.4rem; align-items: center; }
+.auth__voltar:hover { color: var(--gold); }
+
+@media (min-width: 960px) {
+  .auth { grid-template-columns: 1.1fr 1fr; }
+  .auth__arte { display: block; }
+}

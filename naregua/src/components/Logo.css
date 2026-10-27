@@ -1,0 +1,25 @@
+.logo { display: inline-flex; align-items: center; gap: 0.7rem; }
+.logo__img {
+  width: 2.75rem;
+  height: auto;
+  border-radius: 50%;
+  transition: transform 0.5s var(--ease);
+}
+.logo:hover .logo__img { transform: rotate(-8deg) scale(1.05); }
+.logo__texto {
+  display: grid;
+  font-weight: 900;
+  font-stretch: 115%;
+  font-size: 1.2rem;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+}
+.logo__texto small {
+  font-size: 0.6rem;
+  font-weight: 600;
+  font-stretch: 100%;
+  letter-spacing: 0.42em;
+  color: var(--muted);
+  margin-top: 0.3rem;
+}

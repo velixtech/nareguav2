@@ -1,0 +1,46 @@
+.confirmacao__inner { max-width: 40rem; display: grid; justify-items: center; text-align: center; gap: 1rem; }
+.confirmacao__selo {
+  display: grid;
+  place-items: center;
+  width: 4.5rem; height: 4.5rem;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--gold-ink);
+  font-size: 2rem;
+  box-shadow: 0 0 0 10px var(--gold-soft), 0 0 0 22px rgba(242, 181, 58, 0.05);
+  animation: selo 0.7s var(--ease) both;
+}
+@keyframes selo { from { transform: scale(0.4) rotate(-30deg); opacity: 0; } }
+.confirmacao__tag { font-size: 1.5rem; transform: rotate(-3deg); margin-top: 0.75rem; }
+.confirmacao .lead { margin-inline: auto; }
+
+.ticket { width: 100%; text-align: left; margin-top: 1rem; overflow: hidden; }
+.ticket__topo { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; padding: 1.5rem; }
+.ticket__rotulo { display: block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--subtle); }
+.ticket__data { display: block; font-size: clamp(1.2rem, 3vw, 1.5rem); margin-block: 0.2rem; }
+.ticket__hora { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--gold); font-weight: 700; }
+.ticket__corte { position: relative; border-top: 2px dashed var(--line-strong); margin-inline: 1rem; }
+.ticket__corte::before, .ticket__corte::after {
+  content: '';
+  position: absolute;
+  top: -0.75rem;
+  width: 1.5rem; height: 1.5rem;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1px solid var(--line);
+}
+.ticket__corte::before { left: -1.85rem; }
+.ticket__corte::after { right: -1.85rem; }
+.ticket__lista { display: grid; gap: 0.85rem; padding: 1.5rem; }
+.ticket__lista div { display: grid; gap: 0.2rem; }
+.ticket__lista dt { display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.8rem; color: var(--muted); }
+.ticket__lista dd { font-weight: 600; }
+.ticket__total { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 1.1rem 1.5rem; background: var(--surface-2); }
+.ticket__total strong { font-size: 1.5rem; color: var(--gold); font-weight: 900; }
+@media (min-width: 560px) {
+  .ticket__lista div { grid-template-columns: 9rem 1fr; }
+}
+
+.confirmacao__acoes { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-top: 1rem; }
+.confirmacao__home { margin-top: 0.5rem; font-size: 0.92rem; }
+@media (max-width: 520px) { .confirmacao__acoes .btn { width: 100%; } }
