@@ -1,0 +1,10 @@
+# Alternativa à Vercel: Netlify ou Cloudflare Pages também funcionam.
+[build]
+  base = "naregua"
+  command = "npm run build"
+  publish = "dist"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

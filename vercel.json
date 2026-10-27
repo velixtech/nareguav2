@@ -1,0 +1,8 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "vite",
+  "installCommand": "npm ci --prefix naregua",
+  "buildCommand": "npm run build --prefix naregua",
+  "outputDirectory": "naregua/dist",
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}

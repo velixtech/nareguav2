@@ -1,14 +1,14 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.jsx';
-import './index.css';
+import { popularDemo } from './lib/db';
+import './styles/global.css';
 
-import { CtProvider } from './context/Ct.jsx';
+// Cria as contas e a agenda de demonstração na primeira visita.
+popularDemo();
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <CtProvider>
-      <App />
-    </CtProvider>
-  </StrictMode>
+    <App />
+  </StrictMode>,
 );

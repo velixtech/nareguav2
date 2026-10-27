@@ -1,81 +1,97 @@
-import { useState, useContext, useEffect } from "react";
-import { FaUser, FaLock } from "react-icons/fa";
-import { CtContext } from '../context/Ct';
-import { useNavigate } from 'react-router-dom';
-import logoImage from './img/Naregualogo1.png';
-import "./Login.css";
+import { useState } from 'react';
+import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
+import { FiAlertCircle, FiArrowLeft, FiLock, FiMail } from 'react-icons/fi';
+import AuthLayout from '../components/AuthLayout';
+import Campo from '../components/Campo';
+import { useAuth } from '../context/AuthContext';
+import { CONTAS_DEMO } from '../lib/db';
+import { useTitulo } from '../hooks/useTitulo';
+import { destinoPadrao, destinoSeguro } from '../lib/navegacao';
 
-const Login = () => {
+export default function Login() {
+  useTitulo('Entrar');
+  const { usuario, entrar } = useAuth();
   const navigate = useNavigate();
-  const [CtState, dispatch] = useContext(CtContext);
-  const [login, setLogin] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [params] = useSearchParams();
+  const redirect = params.get('redirect');
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
+  const [erro, setErro] = useState('');
 
-  useEffect(() => {
-    if (!localStorage.getItem('users')) {
-      localStorage.setItem('users', JSON.stringify([]));
-    }
-  }, []);
+  if (usuario) return <Navigate to={destinoSeguro(redirect, destinoPadrao(usuario))} replace />;
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const users = JSON.parse(localStorage.getItem('users'));
-
-    const user = users.find((u) => u.login === login && u.senha === password);
-    if (user) {
-      console.log("Login bem-sucedido:", user);
-      setError("");
-      navigate('/Agendamento'); // Redireciona para a página de agendamento após login
-    } else {
-      setError("Login ou senha inválida");
+  const acessar = (e, s) => {
+    try {
+      const u = entrar(e, s);
+      navigate(destinoSeguro(redirect, destinoPadrao(u)), { replace: true });
+    } catch (err) {
+      setErro(err.message);
     }
   };
 
-  const handleLogoClick = () => {
-    navigate('/'); // Redireciona para a página inicial ao clicar no logo
+  const onSubmit = (ev) => {
+    ev.preventDefault();
+    setErro('');
+    acessar(email, senha);
   };
+
+  const cadastroHref = redirect ? `/cadastro?redirect=${encodeURIComponent(redirect)}` : '/cadastro';
 
   return (
-    <div className="containerL">
-      <form onSubmit={handleSubmit}>
-        <img
-          src={logoImage}
-          alt="Logo NaRégua"
-          className="logoL"
-          onClick={handleLogoClick} // Adicionando o evento de clique no logo
+    <AuthLayout
+      titulo="Bem-vindo de volta"
+      subtitulo={redirect ? 'Entre na sua conta para continuar o agendamento.' : 'Entre para agendar e acompanhar seus horários.'}
+    >
+      <form className="auth__form" onSubmit={onSubmit} noValidate>
+        {erro && (
+          <div className="alert" role="alert"><FiAlertCircle /> {erro}</div>
+        )}
+        <Campo
+          label="E-mail"
+          icone={FiMail}
+          type="email"
+          autoComplete="email"
+          placeholder="voce@email.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
         />
-        <div className="input-field">
-          
-          <input
-            type="text"
-            placeholder="Email"
-            required
-            value={login}
-            onChange={(e) => setLogin(e.target.value)}
-          />
-          <FaUser className="icon" />
-        </div>
-        <div className="input-field">
-          <input
-            type="password"
-            placeholder="Senha"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <FaLock className="icon" />
-        </div>
-        {error && <p style={{ color: '#ff0000', textAlign: 'center', marginTop: '10px' }}>{error}</p>}
-        <button type="submit" className="buttonL">Login</button>
-        <div className="signup-link">
-          <p className="pL">
-            Não tem uma conta? <a onClick={() => navigate('/Cadastro')} href="#">Registrar</a>
-          </p>
-        </div>
+        <Campo
+          label="Senha"
+          icone={FiLock}
+          type="password"
+          autoComplete="current-password"
+          placeholder="Sua senha"
+          value={senha}
+          onChange={(e) => setSenha(e.target.value)}
+          required
+        />
+        <button type="submit" className="btn btn--primary btn--lg btn--block" disabled={!email || !senha}>
+          Entrar
+        </button>
       </form>
-    </div>
-  );
-};
 
-export default Login;
+      <p className="auth__rodape">
+        Ainda não tem conta? <Link to={cadastroHref} className="link">Criar conta grátis</Link>
+      </p>
+
+      <div className="auth__demo">
+        <p>
+          <strong>Quer só testar?</strong> Use uma conta de demonstração. Cliente:{' '}
+          {CONTAS_DEMO.cliente.email} / {CONTAS_DEMO.cliente.senha}. Barbearia:{' '}
+          {CONTAS_DEMO.admin.email} / {CONTAS_DEMO.admin.senha}.
+        </p>
+        <div className="auth__demo-botoes">
+          <button type="button" className="btn btn--ghost btn--sm" onClick={() => acessar(CONTAS_DEMO.cliente.email, CONTAS_DEMO.cliente.senha)}>
+            Entrar como cliente
+          </button>
+          <button type="button" className="btn btn--ghost btn--sm" onClick={() => acessar(CONTAS_DEMO.admin.email, CONTAS_DEMO.admin.senha)}>
+            Entrar como barbearia
+          </button>
+        </div>
+      </div>
+
+      <Link to="/" className="auth__voltar"><FiArrowLeft /> Voltar para o site</Link>
+    </AuthLayout>
+  );
+}

@@ -1,7 +1,7 @@
 {
   "name": "naregua",
   "private": true,
-  "version": "0.0.0",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,24 +10,24 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "framer-motion": "^11.11.17",
-    "lucide-react": "^0.460.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.27.0",
-    "sqlite": "^5.1.1",
-    "sqlite3": "^5.1.7"
+    "react-icons": "^5.7.0",
+    "react-router-dom": "^7.18.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
-    "@vitejs/plugin-react": "^4.3.3",
+    "@vitejs/plugin-react": "^5.2.0",
     "eslint": "^9.13.0",
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.14",
     "globals": "^15.11.0",
-    "vite": "^5.4.10"
+    "vite": "^7.3.7"
+  },
+  "engines": {
+    "node": ">=20.19"
   }
 }
