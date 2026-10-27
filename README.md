@@ -55,7 +55,7 @@ O projeto já está configurado (`vercel.json`). Só precisa conectar uma vez:
 
 1. Entre em [vercel.com](https://vercel.com) com a conta do GitHub (plano Hobby, gratuito).
 2. Clique em **Add New → Project** e importe o repositório `velixtech/nareguav2`.
-3. Não precisa mudar nada nas configurações. Clique em **Deploy**.
+3. Não precisa mudar nada nas configurações. Clique em **Deploy**. (Se você já tinha escolhido `naregua` como **Root Directory**, também funciona: essa pasta tem o próprio `vercel.json`.)
 
 Pronto: o site fica em um endereço `https://nome-do-projeto.vercel.app`. A cada push na `main` ele é atualizado sozinho, e cada pull request ganha um link de prévia para testar antes de juntar.
 
