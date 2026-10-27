@@ -18,8 +18,15 @@ import {
 } from './agenda';
 
 const PREFIXO = 'naregua:v2:';
-const CHAVES = { usuarios: 'usuarios', agendamentos: 'agendamentos', sessao: 'sessao', seed: 'seed' };
-const VERSAO_SEED = 1;
+const CHAVES = {
+  usuarios: 'usuarios',
+  agendamentos: 'agendamentos',
+  sessao: 'sessao',
+  seed: 'seed',
+  pins: 'pins',
+  perfil: 'perfilPainel',
+};
+const VERSAO_SEED = 2;
 
 export const CONTAS_DEMO = {
   cliente: { email: 'cliente@naregua.com', senha: 'cliente123' },
@@ -109,7 +116,10 @@ export function entrar(email, senha) {
   return publico(usuario);
 }
 
-export const sair = () => apagar(CHAVES.sessao);
+export const sair = () => {
+  apagar(CHAVES.sessao);
+  apagar(CHAVES.perfil);
+};
 
 export function usuarioAtual() {
   const id = ler(CHAVES.sessao, null);
@@ -179,6 +189,47 @@ export function atualizarStatus(id, status) {
   );
 }
 
+// ---------- painel: perfis e PINs ----------
+// A barbearia tem um único login. Dentro do painel, cada pessoa escolhe o seu
+// perfil (Gestão ou um barbeiro) e confirma com um PIN de 4 dígitos.
+
+export const PINS_DEMO = { gestao: '1234', lucas: '1111', matheus: '2222', rafael: '3333', joao: '4444' };
+
+function garantirPins() {
+  const pins = ler(CHAVES.pins, {});
+  let mudou = false;
+  for (const [perfil, pin] of Object.entries(PINS_DEMO)) {
+    if (!pins[perfil]) {
+      const sal = novoSal();
+      pins[perfil] = { sal, hash: hashSenha(pin, sal) };
+      mudou = true;
+    }
+  }
+  if (mudou) gravar(CHAVES.pins, pins);
+}
+
+export function verificarPin(perfil, pin) {
+  const registro = ler(CHAVES.pins, {})[perfil];
+  return Boolean(registro) && registro.hash === hashSenha(pin, registro.sal);
+}
+
+export function alterarPin(perfil, novoPin) {
+  if (!/^\d{4}$/.test(novoPin)) throw new ErroDb('O PIN precisa ter exatamente 4 números.');
+  const pins = ler(CHAVES.pins, {});
+  const sal = novoSal();
+  gravar(CHAVES.pins, { ...pins, [perfil]: { sal, hash: hashSenha(novoPin, sal) } });
+}
+
+export const perfilPainel = () => ler(CHAVES.perfil, null);
+export const definirPerfilPainel = (perfil) => gravar(CHAVES.perfil, perfil);
+export const limparPerfilPainel = () => apagar(CHAVES.perfil);
+
+/** Agendamentos entre duas datas "YYYY-MM-DD" (inclusive). */
+export const agendamentosEntre = (inicio, fim) =>
+  agendamentos()
+    .filter((a) => a.data >= inicio && a.data <= fim)
+    .sort((x, y) => (x.data + x.inicio).localeCompare(y.data + y.inicio));
+
 // ---------- dados de demonstração ----------
 // Na primeira visita, cria a conta de cliente demo, a conta admin e uma agenda
 // movimentada nos próximos dias, para o painel não aparecer vazio.
@@ -204,6 +255,7 @@ function aleatorio(semente) {
 }
 
 export function popularDemo({ forcar = false } = {}) {
+  garantirPins();
   if (!forcar && ler(CHAVES.seed, 0) >= VERSAO_SEED) return;
 
   const lista = usuarios();
@@ -223,7 +275,8 @@ export function popularDemo({ forcar = false } = {}) {
   gravar(CHAVES.usuarios, lista);
 
   const ids = new Set(lista.filter((u) => u.demo).map((u) => u.id));
-  const reais = forcar ? agendamentos().filter((a) => !ids.has(a.usuarioId)) : agendamentos();
+  // Recria só a agenda das contas demo; o que foi criado por você continua.
+  const reais = agendamentos().filter((a) => !ids.has(a.usuarioId));
   const gerados = [];
   const hoje = new Date();
   const rnd = aleatorio(Number(chaveData(hoje).replaceAll('-', '')));
@@ -252,8 +305,10 @@ export function popularDemo({ forcar = false } = {}) {
     });
   };
 
-  // Agenda dos últimos 3 dias e dos próximos 6 dias.
-  for (let d = -3; d <= 6; d++) {
+  const agora = hoje.getHours() * 60 + hoje.getMinutes();
+
+  // Histórico dos últimos 35 dias e agenda dos próximos 6 dias.
+  for (let d = -35; d <= 6; d++) {
     const data = chaveData(somarDias(hoje, d));
     if (!estaAberto(data)) continue;
     const qtd = 5 + Math.floor(rnd() * 6);
@@ -262,7 +317,8 @@ export function popularDemo({ forcar = false } = {}) {
       const barbeiro = barbeiros[Math.floor(rnd() * barbeiros.length)];
       const hora = deMinutos(8 * 60 + Math.floor(rnd() * 19) * 30);
       let status = 'confirmado';
-      if (d < 0) status = rnd() < 0.85 ? 'concluido' : 'faltou';
+      const passou = d < 0 || (d === 0 && paraMinutos(hora) < agora);
+      if (passou) status = rnd() < 0.88 ? 'concluido' : rnd() < 0.5 ? 'faltou' : 'cancelado';
       else if (rnd() < 0.08) status = 'cancelado';
       tentar(pessoa, data, combos[Math.floor(rnd() * combos.length)], barbeiro.id, hora, status);
     }

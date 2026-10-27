@@ -37,6 +37,7 @@ export default function Footer() {
             <Link to="/login">Entrar</Link>
             <Link to="/cadastro">Criar conta</Link>
             <Link to="/meus-agendamentos">Meus agendamentos</Link>
+            <Link to="/barbearia">Área da barbearia</Link>
           </div>
 
           <div className="footer__col">
