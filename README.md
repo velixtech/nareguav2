@@ -11,7 +11,9 @@ Site completo de barbearia com agendamento online. Identidade de barbearia de qu
 - **Agendamento em 4 passos**: serviços (soma valor e tempo), barbeiro (ou sem preferência), dia e horário (só mostra horários livres de verdade, respeitando expediente, duração do serviço e a agenda de cada barbeiro) e revisão.
 - **Confirmação** com link para adicionar na agenda do Google e mensagem pronta para o WhatsApp.
 - **Meus agendamentos**: próximos e histórico, com cancelamento até 2 horas antes.
-- **Painel da barbearia** (conta admin): agenda do dia por barbeiro, faturamento previsto, ocupação, filtros e ações de concluir, marcar falta ou cancelar.
+- **Área da barbearia** (aba "Sou barbearia" no login, ou `/barbearia`): um login único da barbearia e, dentro do painel, perfis com PIN de 4 números:
+  - **Gestão**: agenda do dia de toda a equipe (concluir, marcar falta, cancelar), relatórios por período (faturamento por dia, serviços mais feitos, desempenho e comissão de cada barbeiro, últimos atendimentos) e aba Equipe para trocar os PINs.
+  - **Cada barbeiro**: só a própria agenda, os próprios ganhos (comissão configurável, padrão 50%) e os procedimentos que fez.
 - **Responsivo** do celular à TV 4K (o layout escala proporcionalmente em telas grandes).
 
 ## Contas de demonstração
@@ -23,7 +25,9 @@ Criadas automaticamente na primeira visita, junto com uma agenda de exemplo:
 | Cliente | cliente@naregua.com | cliente123 |
 | Barbearia (admin) | admin@naregua.com | admin123 |
 
-A tela de login tem botões para entrar com cada uma em um clique. No painel, o botão **Restaurar dados demo** recria a agenda de exemplo a partir do dia de hoje.
+PINs padrão do painel: Gestão `1234`, Lucas `1111`, Matheus `2222`, Rafael `3333`, João `4444`.
+
+A tela de login tem botões para entrar com cada uma em um clique. No painel (perfil Gestão, aba Equipe), o botão **Restaurar dados demo** recria a agenda de exemplo a partir do dia de hoje.
 
 > Não existe servidor: usuários e agendamentos ficam no `localStorage` do navegador. Cada navegador tem seus próprios dados. Para uso real em uma barbearia, as funções de `naregua/src/lib/db.js` devem ser trocadas por chamadas a uma API (Supabase, Firebase ou backend próprio).
 
@@ -67,6 +71,7 @@ Quase tudo fica em um arquivo só: **`naregua/src/data/barbearia.js`**
 
 - nome, slogan, telefone, WhatsApp, Instagram e endereço (o mapa é gerado a partir do endereço)
 - horário de funcionamento de cada dia e intervalo entre horários
+- comissão dos barbeiros (`comissaoBarbeiro`)
 - serviços (nome, descrição, preço, duração e foto)
 - barbeiros (nome, especialidade e foto)
 - fotos da galeria
@@ -91,6 +96,6 @@ naregua/
     styles/global.css     cores, tipografia, botões e formulários
 ```
 
-Rotas: `/`, `/login`, `/cadastro`, `/agendar`, `/agendamento/:id`, `/meus-agendamentos`, `/painel`.
+Rotas: `/`, `/login`, `/barbearia`, `/cadastro`, `/agendar`, `/agendamento/:id`, `/meus-agendamentos`, `/painel`.
 
 Stack: React 18, React Router 7, Vite 7, CSS puro e react-icons.

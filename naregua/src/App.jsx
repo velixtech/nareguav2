@@ -44,6 +44,7 @@ export default function App() {
             <Route path="meus-agendamentos" element={protegida(<MeusAgendamentos />)} />
             <Route path="painel" element={protegida(<Painel />, true)} />
             {/* Endereços antigos do site */}
+            <Route path="barbearia" element={<Navigate to="/login?tipo=barbearia" replace />} />
             <Route path="Agendamento" element={<Navigate to="/agendar" replace />} />
             <Route path="Final" element={<Navigate to="/meus-agendamentos" replace />} />
             <Route path="*" element={<NaoEncontrada />} />

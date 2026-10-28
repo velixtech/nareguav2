@@ -47,6 +47,8 @@ export const barbearia = {
   intervaloAgenda: 30,
   // Quantos dias à frente o cliente consegue agendar.
   diasDeAgenda: 21,
+  // Parte do valor de cada atendimento que fica com o barbeiro (0.5 = 50%).
+  comissaoBarbeiro: 0.5,
 };
 
 export const servicos = [

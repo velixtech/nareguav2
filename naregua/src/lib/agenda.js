@@ -176,3 +176,31 @@ export const ROTULO_STATUS = {
   cancelado: 'Cancelado',
   faltou: 'Não compareceu',
 };
+
+// ---------- períodos dos relatórios ----------
+
+export const PERIODOS = [
+  { id: 'hoje', rotulo: 'Hoje' },
+  { id: '7d', rotulo: '7 dias' },
+  { id: '30d', rotulo: '30 dias' },
+  { id: 'mes', rotulo: 'Este mês' },
+];
+
+export function intervaloDoPeriodo(id, agora = new Date()) {
+  const hoje = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
+  if (id === '7d') return [chaveData(somarDias(hoje, -6)), chaveData(hoje)];
+  if (id === '30d') return [chaveData(somarDias(hoje, -29)), chaveData(hoje)];
+  if (id === 'mes') {
+    return [
+      chaveData(new Date(hoje.getFullYear(), hoje.getMonth(), 1)),
+      chaveData(new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0)),
+    ];
+  }
+  return [chaveData(hoje), chaveData(hoje)];
+}
+
+export function diasEntre(inicio, fim) {
+  const dias = [];
+  for (let d = dataDeChave(inicio); chaveData(d) <= fim; d = somarDias(d, 1)) dias.push(chaveData(d));
+  return dias;
+}
